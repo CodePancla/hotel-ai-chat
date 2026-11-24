@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>酒店库存设计 · AI 对话记录 1–13</title>
+  <style>
+    :root {
+      color: #24272c;
+      background: #fff;
+      font: 16px/1.7 "Noto Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body, p { margin: 0; }
+
+    main {
+      width: min(760px, calc(100% - 48px));
+      margin-inline: auto;
+      padding-block: 28px 56px;
+    }
+
+    .exchange {
+      display: grid;
+      gap: 21px;
+      break-inside: avoid;
+    }
+
+    .exchange + .exchange { margin-top: 34px; }
+
+    .message {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .message-user {
+      justify-self: end;
+      width: fit-content;
+      max-width: 82%;
+    }
+
+    .message-ai { max-width: 95%; }
+    .role {
+      margin-bottom: 5px;
+      color: #5f646e;
+      font-size: .8rem;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .message-user .role { text-align: right; }
+
+    .bubble {
+      padding: 9px 15px;
+      border-radius: 16px;
+      background: #f0f2f5;
+    }
+
+    .bubble code { font: 600 .95em/1.6 ui-monospace, Consolas, monospace; }
+    .message-ai .text + .text { margin-top: 8px; }
+
+    @media (max-width: 560px) {
+      main {
+        width: calc(100% - 32px);
+        padding-block: 20px 42px;
+      }
+
+      .exchange { gap: 17px; }
+      .exchange + .exchange { margin-top: 29px; }
+      .message-user { max-width: 89%; }
+      .message-ai { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="第 1 至 13 条对话，包含用户原话和 AI 回复摘要">
+    <article class="exchange" data-turn="1">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="现在有一道面试题目，需要你来解答，你可以当成代码开发前的系统功能设计，这是对应文档，你先理解文档本身的内容，不要做额外动作，文档放在目录下了">现在有一道面试题目，需要你来解答，你可以当成代码开发前的系统功能设计，这是对应文档，你先理解文档本身的内容，不要做额外动作，文档放在目录下了</p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">已阅读《答题要求.md》，确认题目聚焦 3,000 多家酒店的客房查询与预订。正式答卷要包含架构图、核心流程图、数据模型、关键技术说明，以及 AI 协作记录。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="2">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="进行需求澄清">进行需求澄清</p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">使用 superpowers:brainstorming 技能，按架构类设计逐项确认业务规则，先从库存来源开始。</p>
+        <p class="text question">平台应支持 A 独享配额、B 多渠道共享库存，还是 C 两种都支持？AI 建议以 A 为主方案，将共享库存作为扩展讨论。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="3">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="C"><code>C</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">两种库存来源都纳入主方案。各酒店可采用平台独享配额或多渠道共享库存。</p>
+        <p class="text question">给用户 A 先占房再付款、B 提交即确认并到店付款，还是 C 两种都支持？</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="4">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="A"><code>A</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">先占房，再付款。支付成功后确认预订，超时释放占房。共享库存方需要在支付窗口内保留房间。</p>
+        <p class="text question">一笔订单采用 A 单酒店单房型，还是 B 单酒店多房型？两种口径都支持多间和多晚。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="5">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="A"><code>A</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">一笔订单限一家酒店、一种房型，支持订多间和连住多晚。每晚库存都足够时才整单占房。</p>
+        <p class="text question">查询范围从 A 酒店详情页开始，还是 B 从城市搜索开始并覆盖详情查房？</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="6">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="B"><code>B</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">用户可按城市、入住日、离店日和间数筛选有房酒店，再进入详情查询房型。</p>
+        <p class="text question">选择 A 列表和详情均可短时滞后，还是 B 列表可滞后、详情实时查房？</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="7">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="B"><code>B</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">酒店列表允许短时滞后，详情向对应库存方实时查房。提交订单时重新校验并占房。</p>
+        <p class="text question">选择 A 支持已确认订单取消和回补，还是 B 只覆盖待支付订单的占房释放？</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="8">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="A"><code>A</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">支持按规则整单取消。原库存方回补各晚库存，退款衔接支付系统。</p>
+        <p class="text question">采用 A 明确标注的面试估算，还是 B 用户提供的查询峰值、预订峰值和列表时效指标？</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="9">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="A"><code>A</code></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">采用面试估算并明确标注依据。后续单独验证热门酒店集中抢订，汇总库存、查询、支付和取消的业务规则。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="10">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="依据文档要求输出结果，注意文档要求的输出内容和形式">依据文档要求输出结果，注意文档要求的输出内容和形式</p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">交付初版设计稿，含 1 张系统架构图、3 张核心流程图，以及核心数据模型、库存扣减、高并发分析和设计取舍。附录记录关键 Prompt、被否定的 AI 建议和方案不足。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="11">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="## 核心数据模型给出表设计。关键技术方案图文结合，大段文字不易懂">核心数据模型给出表设计。关键技术方案图文结合，大段文字不易懂</p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">按 MySQL 8.0 / InnoDB 逐表设计 11 张表，补齐字段、约束和索引。新增实体关系图，并用 4 张图配短表格说明扣减事务、供应商查单、支付截止和可售数据同步。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="12">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="将md文档的**mermaid替换为图片，同时将生成的图片都添加到md文档中**">将md文档的<strong>mermaid替换为图片，同时将生成的图片都添加到md文档中</strong></p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">核对当时的版本，确认全部 9 张 PNG 已嵌入 Markdown 正文，图片路径有效，文档内无 Mermaid 代码块。</p>
+      </div>
+    </article>
+
+    <article class="exchange" data-turn="13">
+      <div class="message message-user">
+        <p class="role">用户</p>
+        <p class="bubble" data-original="高并发风险与验证也是分点，最好图文结合">高并发风险与验证也是分点，最好图文结合</p>
+      </div>
+      <div class="message message-ai">
+        <p class="role">AI</p>
+        <p class="text">把第 6 节拆为 6 项风险，每项给出处理方式和验证条件。新增三张 PNG，分别展示最后一间房的并发抢订、迟到的支付回调和缓存同时失效时的回源合并。</p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
