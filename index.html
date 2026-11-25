@@ -248,6 +248,15 @@
   }
   .codeblock pre code { padding: 0; background: none; color: var(--ink); font-size: .86rem; line-height: 1.7; }
   .toc-extra { margin: .6rem .65rem 0; padding-top: .6rem; border-top: 1px solid var(--line); font-size: .85rem; }
+  [hidden] { display: none !important; }
+  .toc-row { display: flex; align-items: center; }
+  .toc-row > a { flex: 1; min-width: 0; }
+  .toc-toggle { flex: none; border: none; background: none; color: var(--muted); cursor: pointer; padding: .2rem .45rem; font-size: .72rem; transition: transform .15s; }
+  .toc-toggle[aria-expanded="true"] { transform: rotate(90deg); color: var(--accent); }
+  .toc .sub { padding-left: 1.55rem; margin: .1rem 0 .35rem; }
+  .toc .sub a { font-size: .8rem; padding: .32rem .65rem; color: var(--muted); }
+  .toc .sub a:hover { color: var(--accent); }
+  @media (max-width: 850px) { .toc .sub { display: block; } }
   .diagram img { width: 100%; }
   .diagram-view { position: relative; height: calc(94dvh - 4.5rem); padding: 0; overflow: hidden; cursor: grab; background: #fff; }
   .diagram-view.drag { cursor: grabbing; }
@@ -269,23 +278,23 @@
   <nav class="toc" aria-labelledby="toc-title">
     <p class="toc-title" id="toc-title">章节目录</p>
     <ol>
-      <li><a href="#chapter-1"><span aria-hidden="true">0</span> 业务规则与容量假设</a></li>
-      <li><a href="#chapter-2"><span aria-hidden="true">1</span> 系统架构图</a></li>
-      <li><a href="#chapter-3"><span aria-hidden="true">2</span> 核心业务流程</a></li>
-      <li><a href="#chapter-4"><span aria-hidden="true">3</span> 核心数据模型</a></li>
-      <li><a href="#chapter-5"><span aria-hidden="true">4</span> 关键技术方案</a></li>
-      <li><a href="#chapter-6"><span aria-hidden="true">5</span> 高并发问题与验证</a></li>
-      <li><a href="#chapter-7"><span aria-hidden="true">6</span> 设计取舍</a></li>
-      <li><a href="#chapter-8"><span aria-hidden="true">7</span> 容量与性能估算（验证取舍成立）</a></li>
+      <li><div class="toc-row"><a href="#chapter-1"><span aria-hidden="true">0</span> 业务规则与容量假设</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-1" aria-label="展开 业务规则与容量假设 子节">▸</button></div><ol class="sub" id="sub-chapter-1" hidden><li><a href="#sec-1-1">0.1 业务规则（硬约束）</a></li><li><a href="#sec-1-2">0.2 容量与时效假设（用于选型和压测验收）</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-2"><span aria-hidden="true">1</span> 系统架构图</a></div></li>
+      <li><div class="toc-row"><a href="#chapter-3"><span aria-hidden="true">2</span> 核心业务流程</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-3" aria-label="展开 核心业务流程 子节">▸</button></div><ol class="sub" id="sub-chapter-3" hidden><li><a href="#sec-3-1">2.1 查询流程（分级一致性承诺）</a></li><li><a href="#sec-3-2">2.2 预订主流程（占房 → 支付 → 确认）</a></li><li><a href="#sec-3-3">2.3 订单状态机</a></li><li><a href="#sec-3-4">2.4 支付到期核实流程（不是"到点就释放"）</a></li><li><a href="#sec-3-5">2.5 取消流程</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-4"><span aria-hidden="true">3</span> 核心数据模型</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-4" aria-label="展开 核心数据模型 子节">▸</button></div><ol class="sub" id="sub-chapter-4" hidden><li><a href="#sec-4-1">3.1 ER 关系</a></li><li><a href="#sec-4-2">3.2 通用约定</a></li><li><a href="#sec-4-3">3.3 表结构（DDL）</a></li><li><a href="#sec-4-4">3.4 模型设计说明</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-5"><span aria-hidden="true">4</span> 关键技术方案</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-5" aria-label="展开 关键技术方案 子节">▸</button></div><ol class="sub" id="sub-chapter-5" hidden><li><a href="#sec-5-1">4.1 独享配额：跨晚整单扣减</a></li><li><a href="#sec-5-2">4.2 共享库存：跨系统结果恢复</a></li><li><a href="#sec-5-3">4.3 库存来源切换：三步协议</a></li><li><a href="#sec-5-4">4.4 支付：两个截止时间与未决恢复</a></li><li><a href="#sec-5-5">4.5 城市列表：可售投影管道与缓存</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-6"><span aria-hidden="true">5</span> 高并发问题与验证</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-6" aria-label="展开 高并发问题与验证 子节">▸</button></div><ol class="sub" id="sub-chapter-6" hidden><li><a href="#sec-6-1">5.1 超卖与跨晚部分扣减</a></li><li><a href="#sec-6-2">5.2 热门房型锁等待与死锁</a></li><li><a href="#sec-6-3">5.3 重复请求、回调与消息</a></li><li><a href="#sec-6-4">5.4 付款确认与超时关单同时发生</a></li><li><a href="#sec-6-5">5.5 供应商超时、限流或通知晚到</a></li><li><a href="#sec-6-6">5.6 列表数据落后与缓存同时过期</a></li><li><a href="#sec-6-7">5.7 切换库存来源时的并发提交</a></li><li><a href="#sec-6-8">5.8 占房悬挂与恶意占座</a></li><li><a href="#sec-6-9">5.9 上线观测与对账</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-7"><span aria-hidden="true">6</span> 设计取舍</a><button class="toc-toggle" type="button" aria-expanded="false" aria-controls="sub-chapter-7" aria-label="展开 设计取舍 子节">▸</button></div><ol class="sub" id="sub-chapter-7" hidden><li><a href="#sec-7-1">6.1 本地库存以 MySQL 条件更新为唯一真相，不上 Redis 预扣</a></li><li><a href="#sec-7-2">6.2 统一库存门面 + 双实现，而不是两条交易链路</a></li><li><a href="#sec-7-3">6.3 供应商准入认证，不做逐晚占房的降级适配</a></li><li><a href="#sec-7-4">6.4 提交时占房、支付后确认（两阶段），支付窗口与保留期挂钩</a></li><li><a href="#sec-7-5">6.5 查询一致性分级 + 独立投影读模型</a></li><li><a href="#sec-7-6">6.6 到期释放走"核实"而非"到点即释放"</a></li><li><a href="#sec-7-7">6.7 单库 MySQL + 预留分片，不上分布式存储</a></li><li><a href="#sec-7-8">6.8 整单取消、单酒店单房型下单</a></li></ol></li>
+      <li><div class="toc-row"><a href="#chapter-8"><span aria-hidden="true">7</span> 容量与性能估算（验证取舍成立）</a></div></li>
     </ol>
     <p class="toc-extra"><a href="chat.html">AI 对话记录</a></p>
   </nav>
   <main class="document">
 <section id="chapter-1" aria-labelledby="title-1">
 <h2 id="title-1"><span>0.</span> 业务规则与容量假设</h2>
-<h3>0.1 业务规则（硬约束）</h3>
+<h3 id="sec-1-1">0.1 业务规则（硬约束）</h3>
 <div class="table-wrap"><table><thead><tr><th>事项</th><th>规则</th></tr></thead><tbody><tr><td>库存来源</td><td>独享配额（平台记账）/ 共享库存（库存方记账），每家酒店同一时间只用一种</td></tr><tr><td>住宿区间</td><td>酒店当地营业日，入住日起算、离店日不占库存；一单一酒店一房型，多间多晚，逐晚全满足才整单占房</td></tr><tr><td>查询承诺</td><td>城市列表允许短时滞后；详情实时查库存方；占房成功才生成支付入口</td></tr><tr><td>预订成功</td><td>截止前支付成功 <strong>且</strong> 库存方确认成功，才返回预订成功；支付到期后核实付款结果，支付单已关闭且未付款才关单释放</td></tr><tr><td>订单取消</td><td>按预订时快照的取消规则整单取消，原库存方回补各晚，取消成功后衔接退款</td></tr><tr><td>库存粒度</td><td>房型 × 营业日的间数，房号由酒店履约时分配</td></tr></tbody></table></div>
-<h3>0.2 容量与时效假设（用于选型和压测验收）</h3>
+<h3 id="sec-1-2">0.2 容量与时效假设（用于选型和压测验收）</h3>
 <div class="table-wrap"><table><thead><tr><th>估算项</th><th>目标与依据</th></tr></thead><tbody><tr><td>数据规模</td><td>3000 酒店 × 8 房型 × 365 天 ≈ <strong>876 万行</strong>日历库存；列表可售投影表同量级</td></tr><tr><td>查询峰值</td><td>列表 1200 QPS + 详情 300 QPS；P95 列表 ≤ 200ms（平台侧），P95 详情 ≤ 1s（整条链路，共享受库存方制约）</td></tr><tr><td>占房峰值</td><td>全站 100 单/秒；另验证<strong>单家热门酒店 50 单/秒集中在同房型同日期</strong>。平均 3 晚 → 约 300 行更新/秒，确认与释放另计</td></tr><tr><td>列表时效</td><td>95% 的库存变化 60 秒内反映到列表；某 (房型,日期) 无法确认同步到最近 60 秒内，就暂时退出"有房"筛选，补齐后恢复</td></tr><tr><td>支付窗口</td><td>开放支付后 10 分钟，且不超过占房保留期结束前 2 分钟（取较早值，见 §4.4）</td></tr><tr><td>单笔上限</td><td>连住 ≤ 30 晚，控制单事务锁行数</td></tr></tbody></table></div>
 <p>规模结论：写入天然分散在 (房型,日期) 粒度，常态单行并发个位数；<strong>这不是秒杀系统</strong>，平台账本用 MySQL 事务即可，复杂度预算应花在共享库存方适配与列表投影管道上。</p>
 </section>
@@ -297,33 +306,33 @@
 </section>
 <section id="chapter-3" aria-labelledby="title-3">
 <h2 id="title-3"><span>2.</span> 核心业务流程</h2>
-<h3>2.1 查询流程（分级一致性承诺）</h3>
+<h3 id="sec-3-1">2.1 查询流程（分级一致性承诺）</h3>
 <figure class="diagram"><img src="assets/fig-02-query.png" alt="客房查询流程图" width="1568" height="494" style="aspect-ratio:1568/494" loading="lazy" decoding="async"><figcaption><span>客房查询流程图</span><button class="zoom" type="button" aria-label="放大查看 客房查询流程图">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <ul><li><strong>列表匹配语义</strong>：全程可售 = 各晚可售的<strong>最小值</strong>。例如搜 2 间连住 2 晚：</li></ul>
 <div class="table-wrap"><table><thead><tr><th>房型</th><th>第 1 晚可售</th><th>第 2 晚可售</th><th>全程可售</th><th>匹配？</th></tr></thead><tbody><tr><td>大床房</td><td>3</td><td>1</td><td>1</td><td>否</td></tr><tr><td>双床房</td><td>1</td><td>3</td><td>1</td><td>否</td></tr></tbody></table></div>
 <p>  两种房型都只有一晚满足，该酒店不匹配——不能把"某晚有房"当成"整段有房"。</p>
 <ul><li>列表允许短时滞后（规则明确），但滞后有上限：同步水位超过 60 秒的 (房型,日期) 退出有房筛选（§4.5）。</li><li>详情是实时承诺：独享读本地主库（一次读齐所有晚，保证同一时刻），共享实时外呼；失败降级为"确认中"而非旧数据。</li><li><strong>提交订单时的占房结果是唯一权威判定</strong>，查询与占房之间的房态变化以占房失败 + 明确提示兜底。</li></ul>
-<h3>2.2 预订主流程（占房 → 支付 → 确认）</h3>
+<h3 id="sec-3-2">2.2 预订主流程（占房 → 支付 → 确认）</h3>
 <figure class="diagram"><img src="assets/fig-14-booking-seq.svg" alt="预订主流程时序图" width="1783" height="2391" style="aspect-ratio:1783/2391" loading="lazy" decoding="async"><figcaption><span>预订主流程时序图</span><button class="zoom" type="button" aria-label="放大查看 预订主流程时序图">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <p>关键语义：</p>
 <ul><li><strong>占房成功是支付入口的前置条件</strong>（规则要求）。独享：订单+库存+台账同事务原子提交；共享：先落 HOLDING 单和 PENDING 操作再外呼，崩溃后可按操作号找回结果。</li><li><strong>支付成功 ≠ 预订成功</strong>。共享确认是外部调用，存在"已付款未确认"窗口：异步重试 + 终态失败补偿（释放+退款），绝不静默丢弃，也不向用户展示假成功。</li><li>支付截止取<strong>两个时点的较早值</strong>（§4.4），从结构上避免"付款成功但占房保留期已过"。</li></ul>
-<h3>2.3 订单状态机</h3>
+<h3 id="sec-3-3">2.3 订单状态机</h3>
 <figure class="diagram"><img src="assets/fig-03-state-machine.png" alt="订单状态机" width="1386" height="2066" style="aspect-ratio:1386/2066" loading="lazy" decoding="async"><figcaption><span>订单状态机</span><button class="zoom" type="button" aria-label="放大查看 订单状态机">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <p>所有状态迁移用<strong>条件更新</strong>：<code>UPDATE orders SET status=新, version=version+1 WHERE order_id=? AND status=旧 AND version=?</code>，affected=1 才继续，并在同一事务登记唯一操作号。这是支付回调 vs 超时关单、用户取消 vs 确认重试等一切并发竞争的裁决点。<strong>迟到结果不得回退已确认/已关闭的终态</strong>；若迟到结果仍涉及资金或库存（如释放后核实到已付款），进对账/退款补偿而非改状态。</p>
-<h3>2.4 支付到期核实流程（不是"到点就释放"）</h3>
+<h3 id="sec-3-4">2.4 支付到期核实流程（不是"到点就释放"）</h3>
 <figure class="diagram"><img src="assets/fig-04-pay-expiry.png" alt="支付到期核实流程图" width="1356" height="2894" style="aspect-ratio:1356/2894" loading="lazy" decoding="async"><figcaption><span>支付到期核实流程图</span><button class="zoom" type="button" aria-label="放大查看 支付到期核实流程图">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <p>规则要求"确认支付单已关闭且未付款"才释放，所以到期动作是<strong>查单 → 关单 → 复核 → 释放</strong>四步。特别注意<strong>支付单创建未决</strong>：创建响应丢失时"查无此单"不能决定释放——创建请求可能仍在途。必须确认创建终态失败，或支付系统已用同一单号完成关闭（关闭能阻止迟到创建重新开单），才允许释放。</p>
-<h3>2.5 取消流程</h3>
+<h3 id="sec-3-5">2.5 取消流程</h3>
 <figure class="diagram"><img src="assets/fig-15-cancel-seq.svg" alt="取消流程时序图" width="1570" height="1019" style="aspect-ratio:1570/1019" loading="lazy" decoding="async"><figcaption><span>取消流程时序图</span><button class="zoom" type="button" aria-label="放大查看 取消流程时序图">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <ul><li>整单取消（规则约束），回补只有"逐晚全量"一种，无 partial 状态。</li><li><strong>先回补库存、后退款</strong>：回补失败进重试任务，退款不发起；退款进度单独记录，重试沿用原退款单号防重复退款。</li><li>回补路由到订单固化的原库存方 + 原路由版本。</li></ul>
 </section>
 <section id="chapter-4" aria-labelledby="title-4">
 <h2 id="title-4"><span>3.</span> 核心数据模型</h2>
-<h3>3.1 ER 关系</h3>
+<h3 id="sec-4-1">3.1 ER 关系</h3>
 <figure class="diagram"><img src="assets/fig-16-er.svg" alt="核心数据表 ER 图" width="790" height="1091" style="aspect-ratio:790/1091" loading="lazy" decoding="async"><figcaption><span>核心数据表 ER 图</span><button class="zoom" type="button" aria-label="放大查看 核心数据表 ER 图">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>3.2 通用约定</h3>
+<h3 id="sec-4-2">3.2 通用约定</h3>
 <ul><li>MySQL 8.0 / InnoDB。<code>DATE</code> = 酒店当地营业日；<code>DATETIME(3)</code> 统一存 UTC；到期判定在锁内读<strong>数据库时间</strong>，不信任应用时钟。</li><li>外部编号、来源标识、请求号用 <code>utf8mb4_0900_bin</code> 排序规则，大小写精确匹配。</li><li>字段默认非空；数据库 CHECK 约束兜底：<code>held + confirmed &lt;= quota</code>、<code>check_out &gt; check_in</code>、<code>rooms &gt; 0</code>。</li><li>投影表（availability_day）可独立部署，通过酒店/房型编号关联，不与账本争抢主库资源。</li></ul>
-<h3>3.3 表结构（DDL）</h3>
+<h3 id="sec-4-3">3.3 表结构（DDL）</h3>
 <div class="codeblock"><span class="lang">sql</span><pre><code>-- 酒店：库存来源是酒店级配置，同一时间只有一种
 CREATE TABLE hotel (
   hotel_id        BIGINT UNSIGNED PRIMARY KEY COMMENT '平台酒店 ID',
@@ -471,12 +480,12 @@ CREATE TABLE availability_sync_cursor (
   covered_through DATETIME(3) NOT NULL COMMENT '已完整同步的时间边界',
   PRIMARY KEY (source_id, feed_scope)
 );</code></pre></div>
-<h3>3.4 模型设计说明</h3>
+<h3 id="sec-4-4">3.4 模型设计说明</h3>
 <ul><li><strong>held / confirmed 分开记</strong>：占房（可释放）与确认（只能走取消回补）语义不同，释放只动 held、取消只动 confirmed，守卫条件各自独立，不会误释放已确认库存。CHECK 约束做最后一道兜底。</li><li><strong>不记房号</strong>：售卖粒度是房型 × 营业日的间数，房号留给酒店履约分配，避免排房组合爆炸。</li><li><strong>操作台账区分业务重试与技术重试</strong>：<code>operation_id</code> 稳定不变供外部幂等与查单；<code>attempt_no</code> 只在"明确失败后重新申请"时递增（如取消被拒后规则内再申请）。技术重试（超时重发）沿用原操作号，绝不换新号——换号重试是重复占房/重复退款的根源。</li><li><strong>下单幂等双保险</strong>：<code>uk_req(account_id, request_id)</code> 防重复建单，<code>request_hash</code> 防同请求号换参数（返回参数冲突而非静默复用）。</li><li><strong>投影与账本分离</strong>：availability_day 是只读物化视图，版本字段防旧消息覆盖新数据；它错了不影响交易正确性，只影响列表时效，可独立重建。</li><li><strong>取消规则、库存来源、路由版本都快照在订单上</strong>：履约判定用预订时的版本，不受后续配置变化影响。</li></ul>
 </section>
 <section id="chapter-5" aria-labelledby="title-5">
 <h2 id="title-5"><span>4.</span> 关键技术方案</h2>
-<h3>4.1 独享配额：跨晚整单扣减</h3>
+<h3 id="sec-5-1">4.1 独享配额：跨晚整单扣减</h3>
 <p><strong>可售间数 = quota − held − confirmed。</strong> 占房事务的完整加锁协议：</p>
 <div class="codeblock"><span class="lang">text</span><pre><code>1. SELECT ... FOR SHARE 锁酒店行
    → 校验 inventory_gate=OPEN、routing_version 与请求一致、status=ACTIVE
@@ -506,25 +515,25 @@ WHERE hotel_id=#{h} AND room_type_id=#{rt} AND stay_date=#{d} AND held &gt;= #{r
 <p>任何重复请求、迟到请求都被台账状态闸门挡下——这是"超时释放 vs 支付确认"竞争的最终解法。</p>
 <p><strong>配额调整</strong>走同一行锁：新配额必须 ≥ held + confirmed，否则拒绝；酒店确需缩量时，将受影响日期 <code>sales_paused=TRUE</code>（停止新占房，存量占房/订单仍按规则处置），转履约侧协商。</p>
 <p><strong>死锁预防</strong>：全链路（占房/确认/释放/取消/到期任务/配额调整）统一按 酒店 → 订单 → 台账 → 库存行(日期升序) 加锁。死锁仍发生时（InnoDB 检测回滚），用原 request_id 限次重试、随机退避。</p>
-<h3>4.2 共享库存：跨系统结果恢复</h3>
+<h3 id="sec-5-2">4.2 共享库存：跨系统结果恢复</h3>
 <p><strong>供应商准入条件</strong>（接入时逐家能力认证，不达标不开放预订）：</p>
 <p>1. 跨晚整单原子占房（全满足或全失败）； 2. 明确的占房保留期限； 3. 用原占房号确认/释放，整单取消； 4. 用原操作号查结果； 5. 重发同一操作只生效一次（外部幂等）。</p>
 <p>能力未达标的供给：转为独享配额模式接入，或暂停预订。<strong>不做"逐晚占房+失败补偿"的降级适配</strong>——补偿窗口内其他渠道仍在售，平台无法单方面保证不超卖（取舍见 §6）。</p>
 <p><strong>结果恢复矩阵</strong>（核心纪律：超时 ≠ 失败，换号重试 = 事故）：</p>
 <div class="table-wrap"><table><thead><tr><th>场景</th><th>平台动作</th></tr></thead><tbody><tr><td>供应商成功，平台写入中断</td><td>按 <code>operation_id</code> 查单找回结果，再更新本地订单/台账；HOLDING 超时单由兜底扫描驱动</td></tr><tr><td>响应超时、结果未知</td><td>操作保持 PENDING，用<strong>同一操作号</strong>查单或重试，直到可核实的终态</td></tr><tr><td>查到占房成功，但订单已无法开放支付（窗口用尽/已关单）</td><td>释放迟到的占房；确认供应商无占房/已释放/已到期后关闭订单</td></tr><tr><td>确认终态失败（保留期已过等）</td><td>已付款 → 按原支付单号登记唯一退款 + outbox 事件，同事务提交；未付款 → 关单</td></tr><tr><td>已确认订单取消</td><td>订单行锁推进 CANCELLING，同事务登记唯一 CANCEL 操作；并发取消复用进行中操作；供应商明确拒绝后才允许规则内重新申请（attempt_no+1）</td></tr><tr><td>供应商限流/故障</td><td>按供应商独立线程池 + 并发上限 + 重试预算 + 熔断；查房降级"确认中"，占房快速失败不建单</td></tr></tbody></table></div>
 <p><strong>对账</strong>：定时按外部凭据核对未决/已确认/已取消订单，平台镜像 vs 库存方账单；监控超期未决数、支付后确认成功率、退款积压。差异自动修复或告警。</p>
-<h3>4.3 库存来源切换：三步协议</h3>
+<h3 id="sec-5-3">4.3 库存来源切换：三步协议</h3>
 <p>风险：实例读到旧路由后暂停，等新来源开放才继续向旧方占房——同一批客房可能被两边同时售卖。解法是<strong>酒店行共享锁/排他锁协调准入与关门 + 路由版本</strong>：</p>
 <figure class="diagram"><img src="assets/fig-05-source-switch.png" alt="库存来源切换三步协议" width="3120" height="1120" style="aspect-ratio:3120/1120" loading="lazy" decoding="async"><figcaption><span>库存来源切换三步协议</span><button class="zoom" type="button" aria-label="放大查看 库存来源切换三步协议">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <ul><li>读到旧路由的迟到请求：在第一步的共享锁下会被 gate/version 校验拒绝，不可能向旧方登记新占房。</li><li>切换期间详情和占房按权威路由校验；列表沿用原有时效上限，靠城市缓存版本切换投影数据。</li><li><code>idx_route(hotel_id, routing_version, status, order_id)</code> 支撑旧路由在途订单扫描。</li></ul>
-<h3>4.4 支付：两个截止时间与未决恢复</h3>
+<h3 id="sec-5-4">4.4 支付：两个截止时间与未决恢复</h3>
 <p><strong>pay_deadline = min(开放支付时刻 + 10min, 占房保留期 expires_at − 2min)</strong>。</p>
 <ul><li>独享：平台自定保留期（如 15min），窗口实际取 10min；</li><li>共享：保留期由库存方承诺决定，供应商保留期短则支付窗口相应缩短——<strong>共享库存的实际保留承诺决定可发放的支付窗口</strong>；</li><li>窗口已用尽（计算结果 ≤ 当前时间）：直接释放占房关单，不出支付入口。</li><li>2 分钟缓冲用于支付回调传播 + 确认调用，从结构上消灭"付款成功但占房已过期"。</li></ul>
 <p><strong>创建与关单的未决恢复</strong>：</p>
 <div class="table-wrap"><table><thead><tr><th>环节</th><th>纪律</th></tr></thead><tbody><tr><td>创建支付单</td><td>同一事务先落 <code>payment_order_id + CREATING</code>，再按原单号幂等调用支付系统；创建结果未知时按原单号继续核实，不换新单号</td></tr><tr><td>到期关单</td><td>先推进订单到 CLOSING（支付入口只对待支付状态开放），再调支付关单；<strong>单次"查无此单"不能决定释放</strong>——需确认创建终态，或支付系统已用同一单号完成可阻止迟到创建的关闭</td></tr><tr><td>回调 vs 关单</td><td>以支付系统权威结果为准，按预期状态+订单版本条件更新；选定确认或释放分支时同事务登记唯一操作号；任务中断按原操作恢复</td></tr><tr><td>迟到结果</td><td>不得回退已确认/已关闭状态；释放后核实到已付款 → 按支付单号登记唯一退款 + outbox，同事务提交</td></tr><tr><td>到期与确认竞争（独享）</td><td>到期任务与确认操作按同一锁序（订单→台账→库存行）加锁，<strong>取得锁后读 DB 时间</strong>判定；到期仍未确认的占房原子释放；共享以库存方终态为准</td></tr></tbody></table></div>
 <p>核实结果分支汇总：</p>
 <div class="table-wrap"><table><thead><tr><th>核实结果</th><th>库存与订单动作</th></tr></thead><tbody><tr><td>截止前已付款（通知可能迟到）</td><td>按 paid_at 认定，确认原占房；库存确认成功后才告知预订成功</td></tr><tr><td>支付单已关闭且未支付</td><td>释放原占房，完成关单</td></tr><tr><td>付款时刻 ≥ 截止</td><td>结束占房后按原单号退款</td></tr><tr><td>保留期已过、库存方明确未确认</td><td>预订失败；已付款则退款</td></tr><tr><td>支付/确认/释放结果未知</td><td>订单保持处理中，按原单号查到最终结果再继续</td></tr></tbody></table></div>
-<h3>4.5 城市列表：可售投影管道与缓存</h3>
+<h3 id="sec-5-5">4.5 城市列表：可售投影管道与缓存</h3>
 <p>列表不查账本，查<strong>按城市组织的可售投影</strong>，管道如下：</p>
 <figure class="diagram"><img src="assets/fig-06-projection.png" alt="列表可售投影管道" width="1568" height="336" style="aspect-ratio:1568/336" loading="lazy" decoding="async"><figcaption><span>列表可售投影管道</span><button class="zoom" type="button" aria-label="放大查看 列表可售投影管道">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
 <p><strong>投影更新规则</strong>：</p>
@@ -536,49 +545,49 @@ WHERE hotel_id=#{h} AND room_type_id=#{rt} AND stay_date=#{d} AND held &gt;= #{r
 <section id="chapter-6" aria-labelledby="title-6">
 <h2 id="title-6"><span>5.</span> 高并发问题与验证</h2>
 <p>每项按 风险 → 处理 → 验证 组织。验证需用真实 MySQL/Redis/支付系统/供应商接口做并发与故障注入，不是纸面推演。</p>
-<h3>5.1 超卖与跨晚部分扣减</h3>
+<h3 id="sec-6-1">5.1 超卖与跨晚部分扣减</h3>
 <ul><li><strong>风险</strong>：两单同时看到最后一间房；连住单只扣了部分日期。</li><li><strong>处理</strong>：多实例通过同一 MySQL 主库行锁协调，单事务逐晚校验+扣减（§4.1）；共享交给覆盖全渠道的库存方整单占房。</li><li><strong>验证</strong>：≥2 台订单服务实例同时接收 100 笔不同请求，抢两晚各剩 1 间的同房型 → 恰 1 单成功、两晚各占 1 间；再让两单日期部分重叠 → 重叠晚仍最多 1 单成功；任一晚不足 → 整单失败且各晚库存维持原值。共享另用两个销售渠道同时抢订验证。</li></ul>
 <figure class="diagram"><img src="assets/fig-11-race-oversell.png" alt="并发抢订行锁串行化时序" width="3120" height="1240" style="aspect-ratio:3120/1240" loading="lazy" decoding="async"><figcaption><span>并发抢订行锁串行化时序</span><button class="zoom" type="button" aria-label="放大查看 并发抢订行锁串行化时序">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>5.2 热门房型锁等待与死锁</h3>
+<h3 id="sec-6-2">5.2 热门房型锁等待与死锁</h3>
 <ul><li><strong>风险</strong>：大量订单命中同房型同日期，行锁等待拉长 RT；加锁顺序不一致引发死锁。</li><li><strong>处理</strong>：事务内纯 SQL 缩短锁持有；统一锁序；死锁/锁超时用原请求号限次重试+随机退避；单酒店并发请求数上限、单供应商调用并发上限。</li><li><strong>验证</strong>：对同一热门房型施加 50 单/秒，同时保持其他酒店流量。记录锁等待时间、重试比例、成功 TPS、P99 耗时，并确认其他酒店下单不受影响。（估算：50 单/秒 × 单事务锁持有 ~5ms ≈ 25% 单行锁利用率，可承载；若实测恶化再启用 §6 演进路径。）</li></ul>
-<h3>5.3 重复请求、回调与消息</h3>
+<h3 id="sec-6-3">5.3 重复请求、回调与消息</h3>
 <ul><li><strong>风险</strong>：客户端重试、支付回调重发、事件重复投递 → 重复占房/回补/退款。</li><li><strong>处理</strong>：下单、库存操作、支付、退款各用稳定业务号 + 唯一键 + 状态条件更新；同请求号复用前校验参数指纹。</li><li><strong>验证</strong>：并发重复发送相同下单/付款通知/取消请求 → 每个业务动作只生效一次，订单与各晚库存一致；同请求号换房型/日期 → 返回参数冲突。</li></ul>
-<h3>5.4 付款确认与超时关单同时发生</h3>
+<h3 id="sec-6-4">5.4 付款确认与超时关单同时发生</h3>
 <ul><li><strong>风险</strong>：付款已成功但超时任务先到，误释放有效订单；或释放瞬间用户付款。</li><li><strong>处理</strong>：先核实支付终态和 paid_at，再按订单版本条件更新选定分支（§4.4）；确认与到期由库存方/DB 时间判定终态。</li><li><strong>验证</strong>：分别模拟 ①截止前付款但回调迟到 ②已关支付单且未付款 ③付款成功但占房先到期 → 期望分别为只确认一次、只释放一次、只退款一次。另模拟支付单创建响应丢失、关单与创建交错、选定分支后实例退出 → 验证可恢复，且支付系统不会让迟到创建重新打开已关支付单。</li></ul>
 <figure class="diagram"><img src="assets/fig-12-pay-close-race.png" alt="付款回调与超时关单竞争裁决" width="3120" height="1280" style="aspect-ratio:3120/1280" loading="lazy" decoding="async"><figcaption><span>付款回调与超时关单竞争裁决</span><button class="zoom" type="button" aria-label="放大查看 付款回调与超时关单竞争裁决">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>5.5 供应商超时、限流或通知晚到</h3>
+<h3 id="sec-6-5">5.5 供应商超时、限流或通知晚到</h3>
 <ul><li><strong>风险</strong>：供应商已占房但平台收到超时，换号重试 → 重复占房；迟到结果覆盖已定状态。</li><li><strong>处理</strong>：按供应商设等待时限/并发上限/重试预算；结果未知按原操作号查到终态再推进；查房失败提示"暂时无法确认"。</li><li><strong>验证</strong>：模拟供应商已占房但平台没收到回复后重启 → 保留期内按操作号找回原占房，库存/订单/资金按编号对上；模拟限流与通知乱序 → 已定订单结果不被覆盖，其他供应商不受影响。</li></ul>
-<h3>5.6 列表数据落后与缓存同时过期</h3>
+<h3 id="sec-6-6">5.6 列表数据落后与缓存同时过期</h3>
 <ul><li><strong>风险</strong>：热查询键缓存同时失效放大读库压力；事件遗漏/乱序让列表展示过期库存。</li><li><strong>处理</strong>：短租约共用一次回源 + Lua 校验令牌与城市版本 + 水位约束绝对到期（§4.5）。</li><li><strong>验证</strong>：多实例同时遇到同键过期 → 健康状态下共用一次查库；模拟持有者卡到租约过期、Redis 故障切换、消息乱序 → 旧持有者无法回填或误删新租约，查库并发仍受限，超 60 秒时效的数据退出有房筛选。</li></ul>
 <figure class="diagram"><img src="assets/fig-13-cache-lease.png" alt="缓存短租约防击穿时序" width="3120" height="1200" style="aspect-ratio:3120/1200" loading="lazy" decoding="async"><figcaption><span>缓存短租约防击穿时序</span><button class="zoom" type="button" aria-label="放大查看 缓存短租约防击穿时序">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>5.7 切换库存来源时的并发提交</h3>
+<h3 id="sec-6-7">5.7 切换库存来源时的并发提交</h3>
 <ul><li><strong>风险</strong>：实例持旧路由暂停后恢复，向旧方占房，新来源同时开卖 → 双卖。</li><li><strong>处理</strong>：酒店行共享锁/排他锁协调准入与关门；旧路由在途占房必须核完终态；新来源扣除旧占用后才开放（§4.3）。</li><li><strong>验证</strong>：实例读旧路由后暂停、切换完成后恢复 → 被拒绝按旧路由登记；请求登记后暂停并尝试切换 → 新来源等这笔核完终态才开放。</li></ul>
-<h3>5.8 占房悬挂与恶意占座</h3>
+<h3 id="sec-6-8">5.8 占房悬挂与恶意占座</h3>
 <ul><li><strong>风险</strong>：共享占房成功后平台崩溃留下孤儿占房；批量下单不支付锁死热门库存。</li><li><strong>处理</strong>：先落 HOLDING 单+PENDING 操作再外呼；<code>idx_status_expire</code>/<code>idx_status_deadline</code> 支撑兜底扫描；10min 支付窗口 + 单用户待支付订单数限制 + 风控。</li><li><strong>验证</strong>：在"外呼成功、本地提交前"注入进程崩溃 → 扫描任务在保留期内找回并释放或推进；批量占座请求 → 窗口到期全部释放，库存恢复。</li></ul>
-<h3>5.9 上线观测与对账</h3>
+<h3 id="sec-6-9">5.9 上线观测与对账</h3>
 <ul><li><strong>平台配额</strong>：按营业日核对 Σ占房明细 vs held/confirmed 计数；监控配额差异、锁等待、库存写入失败。<strong>主库故障切换</strong>需验证无双主写入、无已确认事务丢失：切换后同一请求只生效一次，此前已承诺的库存仍可查。</li><li><strong>共享库存</strong>：按外部凭据核对未决/已确认/已取消；监控超期未决数、支付后确认成功率、退款积压。</li><li><strong>客房查询</strong>：按来源跟踪列表更新延迟（P95 ≤ 60s 承诺）、批量回源次数、列表 P95 ≤ 200ms。</li></ul>
 </section>
 <section id="chapter-7" aria-labelledby="title-7">
 <h2 id="title-7"><span>6.</span> 设计取舍</h2>
-<h3>6.1 本地库存以 MySQL 条件更新为唯一真相，不上 Redis 预扣</h3>
+<h3 id="sec-7-1">6.1 本地库存以 MySQL 条件更新为唯一真相，不上 Redis 预扣</h3>
 <ul><li><strong>选择</strong>：独享账本直接 DB 原子扣减；Redis 只做列表读缓存与回源租约。</li><li><strong>理由</strong>：876 万行、写入分散，常态单行并发个位数；热点验证目标 50 单/秒对应约 25% 单行锁利用率，行锁扛得住。Redis+Lua 预扣引入双账本一致、崩溃恢复、对账三套新复杂度，本题规模下是负收益。</li><li><strong>代价</strong>：极端促销热点下 RT 上升。</li><li><strong>演进路径</strong>：真出现秒杀级热点，对该 (房型,日期) 局部启用 Redis 预扣 + 异步落账 + 对账，作为插件而非全局架构。</li></ul>
 <figure class="diagram"><img src="assets/fig-07-tradeoff-ledger.png" alt="单账本与双账本对比" width="3120" height="1280" style="aspect-ratio:3120/1280" loading="lazy" decoding="async"><figcaption><span>单账本与双账本对比</span><button class="zoom" type="button" aria-label="放大查看 单账本与双账本对比">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>6.2 统一库存门面 + 双实现，而不是两条交易链路</h3>
+<h3 id="sec-7-2">6.2 统一库存门面 + 双实现，而不是两条交易链路</h3>
 <ul><li><strong>选择</strong>：交易服务只面对五个语义接口，来源差异封装在路由与适配层。</li><li><strong>理由</strong>：状态机、支付、取消、退款对两种来源同构；两条链路会让补偿逻辑翻倍。</li><li><strong>代价</strong>：共享台账是镜像，存在短暂不一致窗口，必须配对账。接受——规则已明确共享由库存方记账，平台镜像本就不是权威。</li></ul>
-<h3>6.3 供应商准入认证，不做逐晚占房的降级适配</h3>
+<h3 id="sec-7-3">6.3 供应商准入认证，不做逐晚占房的降级适配</h3>
 <ul><li><strong>选择</strong>：把"跨晚原子占房、明确保留期、原号确认/释放、原号查结果、重发只生效一次"作为接入硬门槛；不达标转独享或暂停预订。</li><li><strong>理由</strong>：逐晚占房+失败补偿的窗口内，其他渠道仍在售，平台单方面无法保证不超卖，且补偿释放本身也可能失败，对账复杂度失控。</li><li><strong>代价</strong>：供给接入摩擦变大，部分长尾供应商无法以共享模式上线。这是用供给广度换正确性确定性。</li></ul>
 <figure class="diagram"><img src="assets/fig-08-tradeoff-admission.png" alt="逐晚补偿窗口与整单原子占房对比" width="3120" height="1200" style="aspect-ratio:3120/1200" loading="lazy" decoding="async"><figcaption><span>逐晚补偿窗口与整单原子占房对比</span><button class="zoom" type="button" aria-label="放大查看 逐晚补偿窗口与整单原子占房对比">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>6.4 提交时占房、支付后确认（两阶段），支付窗口与保留期挂钩</h3>
+<h3 id="sec-7-4">6.4 提交时占房、支付后确认（两阶段），支付窗口与保留期挂钩</h3>
 <ul><li>规则硬性要求，方案照此建模。两个代价各有对冲：占座 → 短窗口+到期核实+占座限制；已付款未确认窗口 → 显式状态+重试+退款补偿。</li><li><strong>pay_deadline 取 min(开放+10min, 保留期−2min)</strong>：代价是短保留期供应商的支付窗口被压缩（可能影响转化）；换来"付款成功但占房过期"被结构性堵死。窗口用尽直接关单，不出支付入口。</li></ul>
 <figure class="diagram"><img src="assets/fig-09-tradeoff-deadline.png" alt="支付窗口与保留期时间轴" width="3120" height="920" style="aspect-ratio:3120/920" loading="lazy" decoding="async"><figcaption><span>支付窗口与保留期时间轴</span><button class="zoom" type="button" aria-label="放大查看 支付窗口与保留期时间轴">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>6.5 查询一致性分级 + 独立投影读模型</h3>
+<h3 id="sec-7-5">6.5 查询一致性分级 + 独立投影读模型</h3>
 <ul><li>列表 QPS 最高、价值密度最低，规则允许滞后 → 独立投影表 + 缓存 + 水位时效，成本最低且不拖累交易主库。</li><li>详情实时：独享一次事务读齐全部晚（同一时刻快照），共享实时外呼，失败降级"确认中"。</li><li><strong>把强一致的钱花在占房这一个点上</strong>。投影错了只影响列表体验，可整表重建，不影响资金与库存正确性。</li></ul>
 <figure class="diagram"><img src="assets/fig-10-tradeoff-consistency.png" alt="查询一致性分级" width="3120" height="860" style="aspect-ratio:3120/860" loading="lazy" decoding="async"><figcaption><span>查询一致性分级</span><button class="zoom" type="button" aria-label="放大查看 查询一致性分级">放大查看 <span aria-hidden="true">↗</span></button></figcaption></figure>
-<h3>6.6 到期释放走"核实"而非"到点即释放"</h3>
+<h3 id="sec-7-6">6.6 到期释放走"核实"而非"到点即释放"</h3>
 <ul><li>延迟消息只触发核实；释放前提是查单确认支付单已关闭且未付款（规则要求，也是资损防线）。"查无此单"不能释放（创建可能在途）。</li><li>代价：多两次支付调用 + CLOSING 中间态；换来最难看的资损被结构性堵死。消息丢失由兜底扫描补偿。</li></ul>
-<h3>6.7 单库 MySQL + 预留分片，不上分布式存储</h3>
+<h3 id="sec-7-7">6.7 单库 MySQL + 预留分片，不上分布式存储</h3>
 <ul><li>876 万行、分散写入，单库+读写分离足够；hotel_id 是天然分片键（所有库存操作都带），需要时平滑拆分。投影表可先行独立部署。</li><li>拒绝一开始就分库分表：运维复杂度前置，收益为零。</li></ul>
-<h3>6.8 整单取消、单酒店单房型下单</h3>
+<h3 id="sec-7-8">6.8 整单取消、单酒店单房型下单</h3>
 <ul><li>规则限定。回补只有逐晚全量一种，无 partial 状态、无部分退款拆分；一次付款对应一个库存来源和一份占房凭据，确认/释放/取消基于同一批日期。用户要多房型需分单。</li></ul>
 </section>
 <section id="chapter-8" aria-labelledby="title-8">
@@ -595,10 +604,12 @@ WHERE hotel_id=#{h} AND room_type_id=#{rt} AND stay_date=#{d} AND held &gt;= #{r
 </dialog>
 <script>
 const links=[...document.querySelectorAll('.toc a[href^="#chapter-"]')];
-const spy=()=>{let cur=links[0];for(const l of links){const s=document.querySelector(l.getAttribute('href'));if(s&&s.getBoundingClientRect().top<=120)cur=l;}links.forEach(l=>{if(l===cur)l.setAttribute('aria-current','location');else l.removeAttribute('aria-current');});};
+const setExpand=(l,on)=>{const li=l.closest('li');const btn=li.querySelector('.toc-toggle');const sub=li.querySelector('.sub');if(!btn)return;btn.setAttribute('aria-expanded',on?'true':'false');sub.hidden=!on;};
+const spy=()=>{let cur=links[0];for(const l of links){const s=document.querySelector(l.getAttribute('href'));if(s&&s.getBoundingClientRect().top<=120)cur=l;}links.forEach(l=>{if(l===cur)l.setAttribute('aria-current','location');else l.removeAttribute('aria-current');setExpand(l,l===cur);});};
 addEventListener('scroll',spy,{passive:true});
 addEventListener('hashchange',spy);
 spy();
+document.querySelectorAll('.toc-toggle').forEach(b=>b.addEventListener('click',()=>{const sub=document.getElementById(b.getAttribute('aria-controls'));sub.hidden=!sub.hidden;b.setAttribute('aria-expanded',sub.hidden?'false':'true');}));
 const dlg=document.getElementById('zoomdlg'),zimg=document.getElementById('zoomimg'),ztitle=document.getElementById('zoomtitle'),zview=document.getElementById('zview'),zpct=document.getElementById('zpct');
 let zs=1,zx=0,zy=0,fit=1,nw=1,nh=1;
 const apply=()=>{zimg.style.transform='translate('+zx+'px,'+zy+'px) scale('+zs+')';zpct.textContent=Math.round(zs/fit*100)+'%';};
