@@ -604,8 +604,7 @@ WHERE hotel_id=#{h} AND room_type_id=#{rt} AND stay_date=#{d} AND held &gt;= #{r
 </dialog>
 <script>
 const links=[...document.querySelectorAll('.toc a[href^="#chapter-"]')];
-const setExpand=(l,on)=>{const li=l.closest('li');const btn=li.querySelector('.toc-toggle');const sub=li.querySelector('.sub');if(!btn)return;btn.setAttribute('aria-expanded',on?'true':'false');sub.hidden=!on;};
-const spy=()=>{let cur=links[0];for(const l of links){const s=document.querySelector(l.getAttribute('href'));if(s&&s.getBoundingClientRect().top<=120)cur=l;}links.forEach(l=>{if(l===cur)l.setAttribute('aria-current','location');else l.removeAttribute('aria-current');setExpand(l,l===cur);});};
+const spy=()=>{let cur=links[0];for(const l of links){const s=document.querySelector(l.getAttribute('href'));if(s&&s.getBoundingClientRect().top<=120)cur=l;}links.forEach(l=>{if(l===cur)l.setAttribute('aria-current','location');else l.removeAttribute('aria-current');});};
 addEventListener('scroll',spy,{passive:true});
 addEventListener('hashchange',spy);
 spy();
