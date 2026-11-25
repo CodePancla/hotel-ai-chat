@@ -326,9 +326,9 @@
 <h3>3.3 表结构（DDL）</h3>
 <div class="codeblock"><span class="lang">sql</span><pre><code>-- 酒店：库存来源是酒店级配置，同一时间只有一种
 CREATE TABLE hotel (
-  hotel_id        BIGINT UNSIGNED PRIMARY KEY,
-  hotel_name      VARCHAR(128) NOT NULL,
-  city_id         BIGINT UNSIGNED NOT NULL,
+  hotel_id        BIGINT UNSIGNED PRIMARY KEY COMMENT '平台酒店 ID',
+  hotel_name      VARCHAR(128) NOT NULL COMMENT '酒店名称,列表与详情展示',
+  city_id         BIGINT UNSIGNED NOT NULL COMMENT '城市 ID,列表搜索分组',
   time_zone       VARCHAR(64) NOT NULL COMMENT 'IANA 时区,营业日换算',
   source_type     VARCHAR(16) NOT NULL COMMENT 'QUOTA / SHARED',
   source_id       VARCHAR(48) NOT NULL COMMENT '路由标识:供应商账号或 PLATFORM',
@@ -341,11 +341,11 @@ CREATE TABLE hotel (
 );
 
 CREATE TABLE room_type (
-  hotel_id      BIGINT UNSIGNED NOT NULL,
-  room_type_id  BIGINT UNSIGNED NOT NULL,
-  room_type_name VARCHAR(128) NOT NULL,
+  hotel_id      BIGINT UNSIGNED NOT NULL COMMENT '所属酒店 ID',
+  room_type_id  BIGINT UNSIGNED NOT NULL COMMENT '酒店内房型 ID',
+  room_type_name VARCHAR(128) NOT NULL COMMENT '房型名称,详情展示',
   external_room_type_id VARCHAR(128) NULL COMMENT 'SHARED 必填',
-  status        VARCHAR(16) NOT NULL,
+  status        VARCHAR(16) NOT NULL COMMENT 'ACTIVE/INACTIVE,房型是否上架',
   PRIMARY KEY (hotel_id, room_type_id),
   UNIQUE KEY uk_ext_rt (hotel_id, external_room_type_id)
 );
@@ -353,9 +353,9 @@ CREATE TABLE room_type (
 -- 独享配额日历库存：房型 × 营业日 一行
 -- 可售 = quota - held - confirmed（派生，不落库）
 CREATE TABLE inventory_day (
-  hotel_id     BIGINT UNSIGNED NOT NULL,
-  room_type_id BIGINT UNSIGNED NOT NULL,
-  stay_date    DATE NOT NULL,
+  hotel_id     BIGINT UNSIGNED NOT NULL COMMENT '酒店 ID',
+  room_type_id BIGINT UNSIGNED NOT NULL COMMENT '房型 ID',
+  stay_date    DATE NOT NULL COMMENT '酒店当地营业日',
   quota        SMALLINT UNSIGNED NOT NULL COMMENT '酒店留给平台的独享间数',
   held         SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '已占未确认',
   confirmed    SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '已确认未取消',
@@ -369,14 +369,14 @@ CREATE TABLE inventory_day (
 -- 平台占房台账：两种来源统一记录，逐晚一行
 -- 独享=账本组成部分(同事务)；共享=外部占房镜像(最终一致)
 CREATE TABLE inventory_hold (
-  hold_id      BIGINT UNSIGNED PRIMARY KEY,
-  order_id     BIGINT UNSIGNED NOT NULL,
-  hotel_id     BIGINT UNSIGNED NOT NULL,
-  room_type_id BIGINT UNSIGNED NOT NULL,
-  stay_date    DATE NOT NULL,
-  rooms        SMALLINT UNSIGNED NOT NULL,
-  source_type  VARCHAR(16) NOT NULL,
-  source_id    VARCHAR(48) NOT NULL,
+  hold_id      BIGINT UNSIGNED PRIMARY KEY COMMENT '占房台账行 ID',
+  order_id     BIGINT UNSIGNED NOT NULL COMMENT '所属订单 ID',
+  hotel_id     BIGINT UNSIGNED NOT NULL COMMENT '酒店 ID',
+  room_type_id BIGINT UNSIGNED NOT NULL COMMENT '房型 ID',
+  stay_date    DATE NOT NULL COMMENT '住宿营业日,逐晚一行',
+  rooms        SMALLINT UNSIGNED NOT NULL COMMENT '该晚占用间数',
+  source_type  VARCHAR(16) NOT NULL COMMENT '下单时固化的库存来源 QUOTA/SHARED',
+  source_id    VARCHAR(48) NOT NULL COMMENT '下单时固化的路由标识',
   status       VARCHAR(16) NOT NULL COMMENT 'HELD/CONFIRMED/RELEASED',
   expires_at   DATETIME(3) NOT NULL COMMENT '库存承诺的保留期限',
   UNIQUE KEY uk_order_date (order_id, stay_date),
@@ -384,26 +384,26 @@ CREATE TABLE inventory_hold (
 );
 
 CREATE TABLE booking_order (
-  order_id      BIGINT UNSIGNED PRIMARY KEY,
-  account_id    BIGINT UNSIGNED NOT NULL,
+  order_id      BIGINT UNSIGNED PRIMARY KEY COMMENT '平台订单 ID',
+  account_id    BIGINT UNSIGNED NOT NULL COMMENT '预订用户 ID',
   request_id    VARCHAR(64) NOT NULL COMMENT '下单幂等请求号',
   request_hash  BINARY(32) NOT NULL COMMENT '参数指纹,复用前校验一致',
-  hotel_id      BIGINT UNSIGNED NOT NULL,
-  room_type_id  BIGINT UNSIGNED NOT NULL,
-  check_in      DATE NOT NULL,
+  hotel_id      BIGINT UNSIGNED NOT NULL COMMENT '酒店 ID',
+  room_type_id  BIGINT UNSIGNED NOT NULL COMMENT '房型 ID',
+  check_in      DATE NOT NULL COMMENT '入住营业日,含当晚',
   check_out     DATE NOT NULL COMMENT '离店日不占库存',
-  rooms         SMALLINT UNSIGNED NOT NULL,
+  rooms         SMALLINT UNSIGNED NOT NULL COMMENT '全程每晚预订间数',
   source_type   VARCHAR(16) NOT NULL COMMENT '下单时固化',
-  source_id     VARCHAR(48) NOT NULL,
-  routing_version BIGINT UNSIGNED NOT NULL,
+  source_id     VARCHAR(48) NOT NULL COMMENT '下单时固化的路由标识',
+  routing_version BIGINT UNSIGNED NOT NULL COMMENT '下单时的路由版本,取消回补路由用',
   external_hold_id    VARCHAR(128) NULL COMMENT '供应商占房号',
   external_booking_id VARCHAR(128) NULL COMMENT '供应商确认后的预订号',
-  status        VARCHAR(24) NOT NULL DEFAULT 'HOLDING',
-  version       BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  status        VARCHAR(24) NOT NULL DEFAULT 'HOLDING' COMMENT '订单状态机状态,见 §2.3',
+  version       BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '状态条件更新乐观版本',
   amount        BIGINT NOT NULL COMMENT '分',
   cancel_policy_snapshot JSON NOT NULL COMMENT '预订时快照的取消规则',
   pay_deadline  DATETIME(3) NULL COMMENT '两个截止取较早值',
-  created_at    DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  created_at    DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '订单创建时间,UTC',
   UNIQUE KEY uk_req (account_id, request_id),
   KEY idx_status_deadline (status, pay_deadline, order_id),
   KEY idx_route (hotel_id, routing_version, status, order_id),
@@ -413,14 +413,14 @@ CREATE TABLE booking_order (
 -- 操作台账：每个业务动作一条，技术重试沿用原操作号
 CREATE TABLE inventory_operation (
   operation_id  CHAR(26) PRIMARY KEY COMMENT '稳定操作号,重试/查单复用',
-  order_id      BIGINT UNSIGNED NOT NULL,
+  order_id      BIGINT UNSIGNED NOT NULL COMMENT '操作所属订单 ID',
   action        VARCHAR(16) NOT NULL COMMENT 'HOLD/CONFIRM/RELEASE/CANCEL',
   attempt_no    SMALLINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '新业务申请才递增',
   client_request_id VARCHAR(64) NULL COMMENT '识别重复取消请求',
   request_payload JSON NOT NULL COMMENT '发出请求时的完整参数快照',
   status        VARCHAR(16) NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING/SUCCEEDED/FAILED',
   external_ref  VARCHAR(128) NULL COMMENT '供应商返回的操作凭据',
-  next_retry_at DATETIME(3) NULL,
+  next_retry_at DATETIME(3) NULL COMMENT 'PENDING 操作下次可调度时间',
   UNIQUE KEY uk_attempt (order_id, action, attempt_no),
   UNIQUE KEY uk_client (order_id, action, client_request_id),
   KEY idx_retry (status, next_retry_at, operation_id)
@@ -428,45 +428,45 @@ CREATE TABLE inventory_operation (
 
 -- 支付/退款：账务以支付系统为准，这里记业务号与进度
 CREATE TABLE payment_link (
-  order_id         BIGINT UNSIGNED PRIMARY KEY,
+  order_id         BIGINT UNSIGNED PRIMARY KEY COMMENT '所属订单 ID,一单至多一张支付单',
   payment_order_id VARCHAR(64) NOT NULL UNIQUE COMMENT '首次调用前生成,创建/查/关复用',
-  payment_status   VARCHAR(16) NOT NULL DEFAULT 'CREATING',
+  payment_status   VARCHAR(16) NOT NULL DEFAULT 'CREATING' COMMENT 'CREATING/待支付/已支付/已关闭未支付',
   paid_at          DATETIME(3) NULL COMMENT '支付系统认定的有效付款时刻',
   refund_id        VARCHAR(64) NULL UNIQUE COMMENT '退款重试复用,防退两次',
-  refund_status    VARCHAR(16) NULL
+  refund_status    VARCHAR(16) NULL COMMENT '退款进度,账务以支付系统为准'
 );
 
 -- outbox：与库存变更同事务落库，可靠投递
 CREATE TABLE outbox (
-  event_id      BIGINT UNSIGNED PRIMARY KEY,
+  event_id      BIGINT UNSIGNED PRIMARY KEY COMMENT '稳定事件号,重复投递时下游去重',
   event_type    VARCHAR(32) NOT NULL COMMENT '库存变更/路由变更/退款请求',
   aggregate_key VARCHAR(128) NOT NULL COMMENT '库存行或订单业务键',
-  aggregate_version BIGINT UNSIGNED NOT NULL,
+  aggregate_version BIGINT UNSIGNED NOT NULL COMMENT '业务记录提交后的版本',
   payload       JSON NOT NULL COMMENT '更新后的总余量+来源版本',
-  publish_status VARCHAR(16) NOT NULL DEFAULT 'PENDING',
-  next_publish_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  publish_status VARCHAR(16) NOT NULL DEFAULT 'PENDING' COMMENT 'PENDING/已投递',
+  next_publish_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT '投递失败后的下次调度时间',
   KEY idx_publish (publish_status, next_publish_at, event_id)
 );
 
 -- 列表可售投影：按城市组织的读模型
 CREATE TABLE availability_day (
-  hotel_id      BIGINT UNSIGNED NOT NULL,
-  room_type_id  BIGINT UNSIGNED NOT NULL,
-  stay_date     DATE NOT NULL,
-  city_id       BIGINT UNSIGNED NOT NULL,
+  hotel_id      BIGINT UNSIGNED NOT NULL COMMENT '酒店 ID',
+  room_type_id  BIGINT UNSIGNED NOT NULL COMMENT '房型 ID',
+  stay_date     DATE NOT NULL COMMENT '营业日',
+  city_id       BIGINT UNSIGNED NOT NULL COMMENT '城市 ID,列表筛选索引键',
   sellable      SMALLINT UNSIGNED NOT NULL COMMENT '暂停销售时为 0',
-  source_id     VARCHAR(48) NOT NULL,
+  source_id     VARCHAR(48) NOT NULL COMMENT '产生本行的库存来源',
   feed_scope    VARCHAR(64) NOT NULL COMMENT '所属同步范围',
-  routing_version BIGINT UNSIGNED NOT NULL,
-  source_version BIGINT UNSIGNED NOT NULL,
+  routing_version BIGINT UNSIGNED NOT NULL COMMENT '当前库存路由版本',
+  source_version BIGINT UNSIGNED NOT NULL COMMENT '行数据版本,防旧消息覆盖新数据',
   PRIMARY KEY (hotel_id, room_type_id, stay_date),
   KEY idx_city_date (city_id, stay_date, sellable, hotel_id, room_type_id)
 );
 
 -- 同步水位：一批数据完整更新到了什么时间
 CREATE TABLE availability_sync_cursor (
-  source_id   VARCHAR(48) NOT NULL,
-  feed_scope  VARCHAR(64) NOT NULL,
+  source_id   VARCHAR(48) NOT NULL COMMENT '平台或共享库存来源标识',
+  feed_scope  VARCHAR(64) NOT NULL COMMENT '该来源的数据分区/覆盖范围',
   cursor_token VARCHAR(128) NULL COMMENT '连续处理到的消息位置/批量编号',
   covered_through DATETIME(3) NOT NULL COMMENT '已完整同步的时间边界',
   PRIMARY KEY (source_id, feed_scope)
